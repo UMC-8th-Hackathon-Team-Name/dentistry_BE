@@ -66,3 +66,6 @@ export const userPatchPasswd=async(data)=>{
         return userId
     }
 }
+export const autoComplete=async(data)=>{
+    console.log(data)
+}

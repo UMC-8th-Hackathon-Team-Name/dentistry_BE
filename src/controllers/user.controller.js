@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { userSignUp,userSignUpComplete,userLogin,userPatchPasswd } from "../services/user.service.js";
+import { userSignUp,userSignUpComplete,userLogin,userPatchPasswd,autoComplete } from "../services/user.service.js";
 import { bodyToUser,bodyToUserComplete } from "../dtos/user.dto.js";
 
 export const handleUserSignUp = async (req, res, next) => {
@@ -324,7 +324,7 @@ export const handlePatchPasswd=async(req,res,next)=>{
 
 export const handleAutoComplete=async(req,res,next)=>{
   console.log("자동완성 API 를 호출하였습니다.")
-  console.log(req.query.station)
-  
+
+  const stationId=await autoComplete(req.query.station)
 
 }
