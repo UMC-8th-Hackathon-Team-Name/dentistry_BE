@@ -48,6 +48,7 @@ model SubwayStation {
   latitude                Float                   @db.Float
   longitude               Float                   @db.Float
   lines                   Line[]
+  code                    Int
   searchStations          SearchStation[]
   subwayStationFacilities SubwayStationFacility[]
 
@@ -69,8 +70,6 @@ model PreferFacility {
 model Facility {
   id                      Int                     @id @default(autoincrement())
   name                    String                  @unique(map: "name") @db.VarChar(255)
-  status                  Boolean                 @default(true)
-  updatedAt               DateTime                @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
   preferFacilities        PreferFacility[]
   subwayStationFacilities SubwayStationFacility[]
 
@@ -78,22 +77,31 @@ model Facility {
 }
 
 model SubwayStationFacility {
-  id              Int           @id @default(autoincrement())
-  subwayStationId Int           @map("subway_station_id")
-  facilityId      Int           @map("facility_id")
-  facility        Facility      @relation(fields: [facilityId], references: [id])
-  subwayStation   SubwayStation @relation(fields: [subwayStationId], references: [id])
+  id              Int            @id @default(autoincrement())
+  subwayStationId Int            @map("subway_station_id")
+  subwayStation   SubwayStation? @relation(fields: [subwayStationId], references: [id])
+  facilityId      Int            @map("facility_id")
+  facility        Facility?      @relation(fields: [facilityId], references: [id])
+  count           Int            @default(0)
+  updatedAt               DateTime                @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+
 
   @@index([facilityId], map: "subway_station_facility_facility_id_fkey")
   @@index([subwayStationId], map: "subway_station_facility_subway_station_id_fkey")
   @@map("subway_station_facility")
 }
-
-model Line {
+model LineType {
   id              Int           @id @default(autoincrement())
   name            String        @unique @db.VarChar(255)
+  lines                   Line[]
+  @@map("line_type")
+}
+model Line {
+  id              Int           @id @default(autoincrement())
+  subwayLineId    Int           @map("subway_line_id")
   subwayStationId Int           @map("subway_station_id")
   subwayStation   SubwayStation @relation(fields: [subwayStationId], references: [id])
+  subwayLine      LineType      @relation(fields: [subwayLineId], references: [id])
 
   @@index([subwayStationId], map: "line_subway_station_id_fkey")
   @@map("line")
