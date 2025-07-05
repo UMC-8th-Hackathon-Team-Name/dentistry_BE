@@ -12,7 +12,6 @@ const port = process.env.PORT
 import fs from "fs";
 import path from "path";
 import HTTPS from "https";
-import { handleUserSignUp } from "./controllers/user.controller.js";
 import {
   handleUserEditProfile,
   handleUserProfile,
