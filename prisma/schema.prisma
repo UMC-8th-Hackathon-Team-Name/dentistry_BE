@@ -8,14 +8,87 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String   @db.VarChar(255)
-  username  String   @unique @db.VarChar(255)
-  email     String   @unique(map: "email") @db.VarChar(255)
-  password  String   @db.VarChar(255)
-  avatar    String?  @db.VarChar(255)
-  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(6)
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+  id               Int              @id @default(autoincrement())
+  email            String           @unique(map: "email") @db.VarChar(255)
+  password         String           @db.VarChar(255)
+  createdAt        DateTime         @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt        DateTime         @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+  searches         Search[]
+  PreferFacilities PreferFacility[]
 
   @@map("user")
+}
+
+model Search {
+  id             Int             @id @default(autoincrement())
+  userId         Int             @map("user_id")
+  user           User?           @relation(fields: [userId], references: [id])
+  query          String          @db.VarChar(255)
+  createdAt      DateTime        @default(now()) @map("created_at") @db.DateTime(6)
+  searchStations SearchStation[]
+
+  @@map("search")
+}
+
+model SearchStation {
+  id        Int            @id @default(autoincrement())
+  searchId  Int            @map("search_id")
+  search    Search?        @relation(fields: [searchId], references: [id])
+  stationId Int            @map("station_id")
+  station   SubwayStation? @relation(fields: [stationId], references: [id])
+  createdAt DateTime       @default(now()) @map("created_at") @db.DateTime(6)
+
+  @@map("search_station")
+}
+
+model SubwayStation {
+  id                      Int                     @id @default(autoincrement())
+  name                    String                  @unique(map: "name") @db.VarChar(255)
+  latitude                Float                   @db.Float
+  longitude               Float                   @db.Float
+  searchStations          SearchStation[]
+  subwayStationFacilities SubwayStationFacility[]
+  lines                   Line[]
+
+  @@map("subway_station")
+}
+
+model PreferFacility {
+  id         Int       @id @default(autoincrement())
+  userId     Int       @map("user_id")
+  user       User?     @relation(fields: [userId], references: [id])
+  facilityId Int       @map("facility_id")
+  facility   Facility? @relation(fields: [facilityId], references: [id])
+  createdAt  DateTime  @default(now()) @map("created_at") @db.DateTime(6)
+
+  @@map("prefer_facility")
+}
+
+model Facility {
+  id                      Int                     @id @default(autoincrement())
+  name                    String                  @unique(map: "name") @db.VarChar(255)
+  status                  Boolean                 @default(true)
+  updatedAt               DateTime                @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+  PreferFacilities        PreferFacility[]
+  SubwayStationFacilities SubwayStationFacility[]
+}
+
+model SubwayStationFacility {
+  id              Int            @id @default(autoincrement())
+  subwayStationId Int            @map("subway_station_id")
+  subwayStation   SubwayStation? @relation(fields: [subwayStationId], references: [id])
+  facilityId      Int            @map("facility_id")
+  facility        Facility?      @relation(fields: [facilityId], references: [id])
+  createdAt       DateTime       @default(now()) @map("created_at") @db.DateTime(6)
+
+  @@map("subway_station_facility")
+}
+
+model Line {
+  id              Int           @id @default(autoincrement())
+  name            String        @unique @db.VarChar(255)
+  subwayStationId Int           @map("subway_station_id")
+  subwayStation   SubwayStation @relation(fields: [subwayStationId], references: [id])
+
+  @@map("line")
 }
