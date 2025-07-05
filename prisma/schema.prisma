@@ -44,6 +44,7 @@ model SubwayStation {
   name                    String                  @unique(map: "name") @db.VarChar(255)
   latitude                Float                   @db.Float
   longitude               Float                   @db.Float
+  code                    Int
   searchStations          SearchStation[]
   subwayStationFacilities SubwayStationFacility[]
   lines                   Line[]
@@ -64,8 +65,6 @@ model PreferFacility {
 model Facility {
   id                      Int                     @id @default(autoincrement())
   name                    String                  @unique(map: "name") @db.VarChar(255)
-  status                  Boolean                 @default(true)
-  updatedAt               DateTime                @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
   preferFacilities        PreferFacility[]
   subwayStationFacilities SubwayStationFacility[]
 
@@ -78,15 +77,23 @@ model SubwayStationFacility {
   subwayStation   SubwayStation? @relation(fields: [subwayStationId], references: [id])
   facilityId      Int            @map("facility_id")
   facility        Facility?      @relation(fields: [facilityId], references: [id])
+  count           Int            @default(0)
+  updatedAt               DateTime                @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
 
   @@map("subway_station_facility")
 }
-
-model Line {
+model LineType {
   id              Int           @id @default(autoincrement())
   name            String        @unique @db.VarChar(255)
+  lines                   Line[]
+  @@map("line_type")
+}
+model Line {
+  id              Int           @id @default(autoincrement())
+  subwayLineId    Int           @map("subway_line_id")
   subwayStationId Int           @map("subway_station_id")
   subwayStation   SubwayStation @relation(fields: [subwayStationId], references: [id])
+  subwayLine      LineType      @relation(fields: [subwayLineId], references: [id])
 
   @@map("line")
 }
