@@ -12,16 +12,21 @@ import {
     getUserPrefer,
     getUserProfile,
     getUserSearch,
-    getUserSearchAll
+    getUserSearchAll,
+    getUser,
 } from "../repositories/user1.repository.js";
 
 export const userEdit = async (data) => {
+    const user = await getUser({ id: data.id });
+    if (!user) {
+        throw new UserNotFoundError("유저 정보를 가져오지 못 합니다.");
+    }
     await delUserPrefer({ id: data.id });
     await createUserPrefer({
         id: data.id,
-        categoryIds: data.categoryIds,
+        facility: data.facility,
     });
-    const editUser = await getUserPrefer({ id: data.id, categoryIds: data.categoryIds });
+    const editUser = await getUserPrefer({ id: data.id, facility: data.facility });
     return responseFromUserEdit(
         {
             user: { id: data.id },
@@ -32,7 +37,7 @@ export const userEdit = async (data) => {
 export const userProfile = async (data) => {
     const user = await getUserProfile({ id: data.id });
     if (!user) {
-        throw new Error("User not found");
+        throw new UserNotFoundError("유저 정보를 가져오지 못 합니다.");
     }
 
     return responseFromUserProfile(user);
@@ -40,32 +45,44 @@ export const userProfile = async (data) => {
 }
 
 export const userDeleteProfile = async (data) => {
+    const user = await getUser({ id: data.id });
+    if (!user) {
+        throw new UserNotFoundError("유저 정보를 가져오지 못 합니다.");
+    }
     await delUserPrefer({ id: data.id });
     const search = await getUserSearch({ id: data.id });
     for (const item of search) {
         await delUserSearchStation({ id: item.id });
     }
     await delUserSearch({ id: search.id });
-    const user = await delUser({ id: data.id });
-    return responseFromUserProfile(user);
+    const dUser = await delUser({ id: data.id });
+    
+    return responseFromUserProfile(dUser);
 };
 
 export const userRecentSearch = async (data) => {
+    const user = await getUser({ id: data.id });
+    if (!user) {
+        throw new UserNotFoundError("유저 정보를 가져오지 못 합니다.");
+    }
     const search = await getUserSearch({ id: data.id });
     let response = [];
     for (const item of search) {
         response.push(await getUserSearchAll({ id: item.id }));
     }
-    if (!search) {
-        throw new Error("User search history not found");
-    }
     return responseFromUserRecentSearch(...response);
 };
 
 export const UserDeleteSearch = async (data) => {
-    const search = await delUserSearch({ id: data.id });
-    if (!search) {
-        throw new Error("User search history not found");
+    const user = await getUser({ id: data.id });
+    if (!user) {
+        throw new UserNotFoundError("유저 정보를 가져오지 못 합니다.");
     }
-    return responseFromUserRecentSearch(search);
+    const search = await getUserSearch({ id: data.id });
+
+    for (const item of search) {
+        await delUserSearchStation({ id: item.id });
+    }
+    const dSearch = await delUserSearch({ id: search.id });
+    return responseFromUserRecentSearch(dSearch);
 }

@@ -17,7 +17,7 @@ export const handleUserEditProfile = async (req, res, next) => {
            type: 'object',
            properties: {
              id: { type: 'number', example: 1 },
-             categoryIds: { type: 'array', example: [1, 2, 3] },
+             facility: { type: 'array', example: [1, 2, 3] },
            },
          }
        }

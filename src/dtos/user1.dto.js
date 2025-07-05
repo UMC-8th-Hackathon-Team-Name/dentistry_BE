@@ -1,7 +1,7 @@
 export const bodyToUserEdit = (body) => {
     return {
         id: body.id,
-        categoryIds: body.categoryIds,
+        facility: body.facility,
     }
 };
 
@@ -14,7 +14,7 @@ export const bodyToUserId = (body) => {
 export const responseFromUserEdit = ({user, editUser }) => {
     return {
         user,
-        category: editUser
+        facility: editUser
     }
 };
 

@@ -1,7 +1,21 @@
 import { prisma } from "../db.config.js";
+export const getUser = async (data) => {
+    const user = await prisma.user.findUnique({
+        where: { id: data.id },
+        include: {
+            PreferFacilities: {
+                include: {
+                    facility: true,
+                },
+            },
+        },
+    });
+    return user;
+};
+
 export const createUserPrefer = async (data) => {
     const prefers = await prisma.preferFacility.createMany({
-        data: data.categoryIds.map(facilityId => ({
+        data: data.facility.map(facilityId => ({
             userId: data.id,
             facilityId: facilityId,
         })),
@@ -13,7 +27,7 @@ export const getUserPrefer = async (data) => {
     const facilities = await prisma.facility.findMany({
     where: {
       id: {
-        in: data.categoryIds,
+        in: data.facility,
       },
     },
   })
@@ -45,7 +59,6 @@ export const getUserSearch = async (data) => {
     const user = await prisma.search.findMany({
         where: { userId: data.id },
     });
-    console.log("getUserSearch", user);
     return user;
 };
 export const delUserSearch = async (data) => {
