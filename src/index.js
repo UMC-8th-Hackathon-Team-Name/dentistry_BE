@@ -3,16 +3,10 @@ import dotenv from "dotenv";
 import cors from "cors";
 import swaggerAutogen from "swagger-autogen";
 import swaggerUiExpress from "swagger-ui-express";
-
-import { handleUserSignUp,handleUserSignUpComplete,handleUserLogin,handlePatchPasswd,handleAutoComplete } from './controllers/user.controller.js';
-
-dotenv.config();
-const app = express()
-const port = process.env.PORT
 import fs from "fs";
 import path from "path";
 import HTTPS from "https";
-import { handleUserSignUp } from "./controllers/user.controller.js";
+import { handleUserSignUp,handleUserSignUpComplete,handleUserLogin,handlePatchPasswd,handleAutoComplete } from './controllers/user.controller.js';
 import {
   handleUserEditProfile,
   handleUserProfile,
@@ -31,7 +25,9 @@ const corsOptions = {
   preflightContinue: false,
   optionsSuccessStatus: 204,
 };
-
+dotenv.config();
+const app = express()
+const port = process.env.PORT
 app.use(cors(corsOptions));
 app.use(express.static("public"));
 app.use(express.json());
