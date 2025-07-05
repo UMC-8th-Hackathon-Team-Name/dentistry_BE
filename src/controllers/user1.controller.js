@@ -82,20 +82,22 @@ export const handleUserProfile = async (req, res, next) => {
    #swagger.tags = ['User']
    #swagger.summary = '내 프로필 조회'
    #swagger.description = '내 프로필 정보를 조회하기 위한 API입니다.'
-
-   #swagger.requestBody = {
-     required: true,
-     content: {
-       'application/json': {
-         schema: {
-           type: 'object',
-           properties: {
-             id: { type: 'number', example: 1 },
-           },
-         }
-       }
-     }
-   }
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              userId: { type: 'int', example: 1 },
+              password: { type: 'string', example: '비밀번호' }
+            },
+            required: ['userId','password']
+          }
+        }
+      }
+    }
+   
    #swagger.responses[200] = {
      description: '프로필 조회 성공',
      content: {

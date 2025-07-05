@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import swaggerAutogen from "swagger-autogen";
 import swaggerUiExpress from "swagger-ui-express";
-import { handleUserSignUp, handleUserSignUpComplete, handleUserLogin, handlePatchPasswd, handleAutoComplete } from './controllers/user.controller.js';
+import { handleUserSignUp, handleUserSignUpComplete, handleUserLogin, handlePatchPasswd} from './controllers/user.controller.js';
 import {
   handleUserEditProfile,
   handleUserProfile,
