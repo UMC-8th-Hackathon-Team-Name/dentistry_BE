@@ -96,8 +96,8 @@ app.use((err, req, res, next) => {
     }
 
     res.status(err.statusCode || 500).error({
-        errorCode: err.errorCode || "unknown",
-        reason: err.reason || err.message || null,
+        errorCode: err.errorCode || "C001",
+        reason: err.reason || err.message || "서버가 응답하지 못 하였습니다.",
         data: err.data || null,
     });
 });
