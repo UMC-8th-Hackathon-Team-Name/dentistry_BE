@@ -10,3 +10,15 @@ export const responseFromUserEdit = ({user, editUser }) => {
         category: editUser
     }
 };
+
+export const bodyToUserProfile = (body) => {
+    return {
+        id: body.id,
+    }
+}
+
+export const responseFromUserProfile = (user) => {
+    return {
+        user
+    }
+}

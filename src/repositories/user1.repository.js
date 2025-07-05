@@ -26,3 +26,17 @@ export const delUserPrefer = async (data) => {
     });
     return prefer;
 };
+
+export const getUserProfile = async (data) => {
+    const user = await prisma.user.findFirst({
+        where: { id: data.id },
+        include: {
+            PreferFacilities: {
+                include: {
+                    facility: true,
+                },
+            },
+        },
+    });
+    return user;
+}
