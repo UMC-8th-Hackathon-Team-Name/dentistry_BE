@@ -3,10 +3,9 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import swaggerAutogen from "swagger-autogen";
 import swaggerUiExpress from "swagger-ui-express";
-import { handleUserSignUp } from "./controllers/user.controller.js";
+import { handleUserSignUp,handleUserSignUpComplete,handleUserLogin,handlePatchPasswd } from './controllers/user.controller.js';
 
 dotenv.config();
-
 const app = express()
 const port = process.env.PORT
 
@@ -76,13 +75,16 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-app.post('/v1/api/signup', handleUserSignUp);
+app.post('/auth/signup', handleUserSignUp);
+app.post('/auth/complete',handleUserSignUpComplete)
+app.post('/auth/login',handleUserLogin)
+app.patch('/auth/resetPasswd',handlePatchPasswd)
 
 app.use((err, req, res, next) => {
+  console.log("err",err)
     if (res.headersSent) {
         return next(err);
     }
-
     res.status(err.statusCode || 500).error({
         errorCode: err.errorCode || "unknown",
         reason: err.reason || err.message || null,
