@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import swaggerAutogen from "swagger-autogen";
 import swaggerUiExpress from "swagger-ui-express";
-import { handleUserSignUp,handleUserSignUpComplete,handleUserLogin,handlePatchPasswd } from './controllers/user.controller.js';
+import { handleUserSignUp,handleUserSignUpComplete,handleUserLogin,handlePatchPasswd,handleAutoComplete } from './controllers/user.controller.js';
 
 dotenv.config();
 const app = express()
@@ -79,6 +79,7 @@ app.post('/auth/signup', handleUserSignUp);
 app.post('/auth/complete',handleUserSignUpComplete)
 app.post('/auth/login',handleUserLogin)
 app.patch('/auth/resetPasswd',handlePatchPasswd)
+app.get('/autoComplete',handleAutoComplete)
 
 app.use((err, req, res, next) => {
   console.log("err",err)

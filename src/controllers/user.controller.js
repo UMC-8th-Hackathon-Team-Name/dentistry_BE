@@ -176,7 +176,6 @@ export const handleUserSignUpComplete= async(req,res,next) => {
 */
 }
 export const handleUserLogin=async(req,res,next)=>{
-  console.log(req.body)
   const userId=await userLogin(bodyToUser(req.body))
   res.status(StatusCodes.OK).success(userId)
 
@@ -250,7 +249,6 @@ export const handleUserLogin=async(req,res,next)=>{
 }
 
 export const handlePatchPasswd=async(req,res,next)=>{
-  console.log(req.body)
   const userId=await userPatchPasswd(req.body)
   res.status(StatusCodes.OK).success(userId)
 
@@ -322,4 +320,11 @@ export const handlePatchPasswd=async(req,res,next)=>{
       }
     }
 */
+}
+
+export const handleAutoComplete=async(req,res,next)=>{
+  console.log("자동완성 API 를 호출하였습니다.")
+  console.log(req.query.station)
+  
+
 }
