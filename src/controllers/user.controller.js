@@ -255,7 +255,7 @@ export const handlePatchPasswd=async(req,res,next)=>{
    /*
     #swagger.tags = ['User']
     #swagger.summary = '비밀번호 변경 성공'
-    #swagger.description = '비밀번호 변경을 위한 API입니다. 유저 ID 와 비밀번호를 포함해서 요청해야 합니다. '
+    #swagger.description = '비밀번호 변경을 위한 API입니다. 비밀번호를 포함해서 요청해야 합니다. '
     
     #swagger.requestBody = {
       required: true,
@@ -264,7 +264,7 @@ export const handlePatchPasswd=async(req,res,next)=>{
           schema: {
             type: 'object',
             properties: {
-              userId: { type: 'int', example:  },
+              userId: { type: 'int', example: 1 },
               password: { type: 'string', example: '비밀번호' }
             },
             required: ['userId','password']
@@ -285,7 +285,7 @@ export const handlePatchPasswd=async(req,res,next)=>{
               success: {
                 type: 'object',
                 properties: {
-                  userId: { type: 'int', example:  },
+                  userId: { type: 'int', example: 1 },
                   password: { type: 'string', example: '비밀번호' }
                 }
               }
@@ -320,11 +320,4 @@ export const handlePatchPasswd=async(req,res,next)=>{
       }
     }
 */
-}
-
-export const handleAutoComplete=async(req,res,next)=>{
-  console.log("자동완성 API 를 호출하였습니다.")
-
-  const stationId=await autoComplete(req.query.station)
-
 }

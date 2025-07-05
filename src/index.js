@@ -89,7 +89,6 @@ app.post('/auth/signup', handleUserSignUp);
 app.post('/auth/complete', handleUserSignUpComplete)
 app.post('/auth/login', handleUserLogin)
 app.patch('/auth/resetPasswd', handlePatchPasswd)
-app.get('/autoComplete', handleAutoComplete)
 app.patch('/profile/edit', handleUserEditProfile);
 app.post('/profile/me', handleUserProfile);
 app.delete('/profile/delete/me', handleUserDeleteProfile);
