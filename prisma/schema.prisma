@@ -13,8 +13,8 @@ model User {
   password         String           @db.VarChar(255)
   createdAt        DateTime         @default(now()) @map("created_at") @db.DateTime(6)
   updatedAt        DateTime         @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
-  searches         Search[]
   PreferFacilities PreferFacility[]
+  searches         Search[]
 
   @@map("user")
 }
@@ -22,20 +22,23 @@ model User {
 model Search {
   id             Int             @id @default(autoincrement())
   userId         Int             @map("user_id")
-  user           User?           @relation(fields: [userId], references: [id])
   createdAt      DateTime        @default(now()) @map("created_at") @db.DateTime(6)
+  user           User            @relation(fields: [userId], references: [id])
   searchStations SearchStation[]
 
+  @@index([userId], map: "search_user_id_fkey")
   @@map("search")
 }
 
 model SearchStation {
-  id        Int            @id @default(autoincrement())
-  searchId  Int            @map("search_id")
-  search    Search?        @relation(fields: [searchId], references: [id])
-  stationId Int            @map("station_id")
-  station   SubwayStation? @relation(fields: [stationId], references: [id])
+  id        Int           @id @default(autoincrement())
+  searchId  Int           @map("search_id")
+  stationId Int           @map("station_id")
+  search    Search        @relation(fields: [searchId], references: [id])
+  station   SubwayStation @relation(fields: [stationId], references: [id])
 
+  @@index([searchId], map: "search_station_search_id_fkey")
+  @@index([stationId], map: "search_station_station_id_fkey")
   @@map("search_station")
 }
 
@@ -44,21 +47,23 @@ model SubwayStation {
   name                    String                  @unique(map: "name") @db.VarChar(255)
   latitude                Float                   @db.Float
   longitude               Float                   @db.Float
+  lines                   Line[]
   code                    Int
   searchStations          SearchStation[]
   subwayStationFacilities SubwayStationFacility[]
-  lines                   Line[]
 
   @@map("subway_station")
 }
 
 model PreferFacility {
-  id         Int       @id @default(autoincrement())
-  userId     Int       @map("user_id")
-  user       User?     @relation(fields: [userId], references: [id])
-  facilityId Int       @map("facility_id")
-  facility   Facility? @relation(fields: [facilityId], references: [id])
+  id         Int      @id @default(autoincrement())
+  userId     Int      @map("user_id")
+  facilityId Int      @map("facility_id")
+  facility   Facility @relation(fields: [facilityId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
 
+  @@index([facilityId], map: "prefer_facility_facility_id_fkey")
+  @@index([userId], map: "prefer_facility_user_id_fkey")
   @@map("prefer_facility")
 }
 
@@ -80,6 +85,9 @@ model SubwayStationFacility {
   count           Int            @default(0)
   updatedAt               DateTime                @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
 
+
+  @@index([facilityId], map: "subway_station_facility_facility_id_fkey")
+  @@index([subwayStationId], map: "subway_station_facility_subway_station_id_fkey")
   @@map("subway_station_facility")
 }
 model LineType {
@@ -95,5 +103,6 @@ model Line {
   subwayStation   SubwayStation @relation(fields: [subwayStationId], references: [id])
   subwayLine      LineType      @relation(fields: [subwayLineId], references: [id])
 
+  @@index([subwayStationId], map: "line_subway_station_id_fkey")
   @@map("line")
 }
