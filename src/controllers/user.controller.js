@@ -20,7 +20,7 @@ export const handleUserSignUp = async (req, res, next) => {
             type: 'object',
             properties: {
               email: { type: 'string', example: 'email@email.com' },
-              password: { type: 'string', example: '비밀번호' },
+              password: { type: 'string', example: '비밀번호' }
             },
             required: ['email','password']
           }
