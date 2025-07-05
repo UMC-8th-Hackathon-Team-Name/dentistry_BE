@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { bodyToUserDelete, bodyToUserEdit, bodyToUserProfile,bodyToUserRecentSearch } from "../dtos/user1.dto.js";
+import {bodyToUserEdit, bodyToUserId } from "../dtos/user1.dto.js";
 import { userDeleteProfile, userEdit, userProfile, userRecentSearch, UserDeleteSearch } from "../services/user1.service.js";
 
 // 프로필 정보 수정
@@ -166,7 +166,7 @@ export const handleUserProfile = async (req, res, next) => {
   */
   try {
     console.log("내 프로필 조회를 요청했습니다!");
-    const user = await userProfile(bodyToUserProfile(req.body));
+    const user = await userProfile(bodyToUserId(req.body));
     res.status(StatusCodes.OK).success(user);
   } catch (err) {
     return next(err);
@@ -232,7 +232,7 @@ export const handleUserDeleteProfile = async (req, res, next) => {
     */
      try {
         console.log("내 프로필 삭제를 요청했습니다!");
-        const user = await userDeleteProfile(bodyToUserDelete(req.body));
+        const user = await userDeleteProfile(bodyToUserId(req.body));
         res.status(StatusCodes.OK).success(user);
       } catch (err) {
         return next(err);
@@ -323,7 +323,7 @@ export const handleRecentSearch = async (req, res, next) => {
     */
     try {
         console.log("최근 검색 기록 조회를 요청했습니다!");
-        const user = await userRecentSearch(bodyToUserRecentSearch(req.body));
+        const user = await userRecentSearch(bodyToUserId(req.body));
         res.status(StatusCodes.OK).success(user);
     } catch (err) {
         return next(err);
@@ -388,7 +388,7 @@ export const handleDeleteRecentSearch = async (req, res, next) => {
     */
     try {
         console.log("최근 검색 기록 삭제를 요청했습니다!");
-        const search = await UserDeleteSearch(bodyToUserRecentSearch(req.body));
+        const search = await UserDeleteSearch(bodyToUserId(req.body));
         res.status(StatusCodes.OK).success(search);
     } catch (err) {
         return next(err);

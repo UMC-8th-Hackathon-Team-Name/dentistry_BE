@@ -4,6 +4,13 @@ export const bodyToUserEdit = (body) => {
         categoryIds: body.categoryIds,
     }
 };
+
+export const bodyToUserId = (body) => {
+    return {
+        id: body.id,
+    }
+};
+
 export const responseFromUserEdit = ({user, editUser }) => {
     return {
         user,
@@ -11,21 +18,9 @@ export const responseFromUserEdit = ({user, editUser }) => {
     }
 };
 
-export const bodyToUserProfile = (body) => {
-    return {
-        id: body.id,
-    }
-}
-
 export const responseFromUserProfile = (user) => {
     return {
         user
-    }
-}
-
-export const bodyToUserDelete = (body) => {
-    return {
-        id: body.id,
     }
 }
 
@@ -35,11 +30,6 @@ export const responseFromUserDelete = (user) => {
     }
 }
 
-export const bodyToUserRecentSearch = (body) => {
-    return {
-        id: body.id,
-    }
-}
 
 export const responseFromUserRecentSearch = (user) => {
     return {
