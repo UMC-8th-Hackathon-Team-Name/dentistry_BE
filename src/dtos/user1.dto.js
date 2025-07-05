@@ -34,3 +34,15 @@ export const responseFromUserDelete = (user) => {
         user
     }
 }
+
+export const bodyToUserRecentSearch = (body) => {
+    return {
+        id: body.id,
+    }
+}
+
+export const responseFromUserRecentSearch = (user) => {
+    return {
+        user
+    }
+}

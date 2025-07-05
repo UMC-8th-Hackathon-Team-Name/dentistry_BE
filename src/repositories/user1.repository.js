@@ -61,3 +61,13 @@ export const delUser = async (data) => {
     });
     return user;
 }
+
+export const getUserSearchAll = async (data) => {
+    const search = await prisma.searchStation.findMany({
+        where: { searchId: data.id },
+        include: {
+            station: true,
+        },
+    });
+    return search;
+};

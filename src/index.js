@@ -7,7 +7,8 @@ import { handleUserSignUp } from "./controllers/user.controller.js";
 import {
   handleUserEditProfile,
   handleUserProfile,
-  handleUserDeleteProfile
+  handleUserDeleteProfile,
+  handleRecentSearch
 } from "./controllers/user1.controller.js";
 
 dotenv.config();
@@ -85,6 +86,9 @@ app.post('/v1/api/signup', handleUserSignUp);
 app.patch('/profile/edit', handleUserEditProfile);
 app.post('/profile/me', handleUserProfile);
 app.delete('/profile/delete/me', handleUserDeleteProfile);
+app.post('/recent', handleRecentSearch);
+//app.delete('/recent', handleDeleteRecentSearch);
+
 app.use((err, req, res, next) => {
     if (res.headersSent) {
         return next(err);

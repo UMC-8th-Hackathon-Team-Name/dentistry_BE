@@ -1,6 +1,7 @@
 import {
     responseFromUserEdit,
     responseFromUserProfile,
+    responseFromUserRecentSearch,
  } from "../dtos/user1.dto.js";
 import {
     createUserPrefer,
@@ -9,7 +10,8 @@ import {
     delUserSearch,
     getUserPrefer,
     getUserProfile,
-    getUserSearch
+    getUserSearch,
+    getUserSearchAll
 } from "../repositories/user1.repository.js";
 
 export const userEdit = async (data) => {
@@ -44,4 +46,16 @@ export const userDeleteProfile = async (data) => {
     }
     const user = await delUser({ id: data.id });
     return responseFromUserProfile(user);
+};
+
+export const userRecentSearch = async (data) => {
+    const search = await getUserSearch({ id: data.id });
+    let response = [];
+    for (const item of search) {
+        response.push(await getUserSearchAll({ id: item.id }));
+    }
+    if (!search) {
+        throw new Error("User search history not found");
+    }
+    return responseFromUserRecentSearch(...response);
 };

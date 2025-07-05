@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
-import { bodyToUserDelete, bodyToUserEdit, bodyToUserProfile } from "../dtos/user1.dto.js";
-import { userDeleteProfile, userEdit, userProfile } from "../services/user1.service.js";
+import { bodyToUserDelete, bodyToUserEdit, bodyToUserProfile,bodyToUserRecentSearch } from "../dtos/user1.dto.js";
+import { userDeleteProfile, userEdit, userProfile, userRecentSearch } from "../services/user1.service.js";
 
 // 프로필 정보 수정
 export const handleUserEditProfile = async (req, res, next) => {
@@ -237,4 +237,95 @@ export const handleUserDeleteProfile = async (req, res, next) => {
       } catch (err) {
         return next(err);
       }
+};
+
+// 최근 검색 기록 조회
+export const handleRecentSearch = async (req, res, next) => {
+    /*
+     #swagger.tags = ['User']
+     #swagger.summary = '최근 검색 기록 조회'
+     #swagger.description = '사용자의 최근 검색 기록을 조회하기 위한 API입니다.'
+    
+     #swagger.requestBody = {
+         required: true,
+         content: {
+         'application/json': {
+             schema: {
+             type: 'object',
+             properties: {
+                 id: { type: 'number', example: 1 },
+             },
+             }
+         }
+         }
+     }
+     #swagger.responses[200] = {
+  description: '최근 검색 기록 조회 성공',
+  content: {
+    'application/json': {
+      schema: {
+        type: 'object',
+        properties: {
+          resultType: { type: 'string', example: 'SUCCESS' },
+          error: { type: 'object', example: null },
+          success: {
+            type: 'object',
+            properties: {
+              user: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    id: { type: 'number', example: 1 },
+                    searchId: { type: 'number', example: 1 },
+                    stationId: { type: 'number', example: 1 },
+                    station: {
+                      type: 'object',
+                      properties: {
+                        id: { type: 'number', example: 1 },
+                        name: { type: 'string', example: 'name1' },
+                        latitude: { type: 'number', example: 0 },
+                        longitude: { type: 'number', example: 0 }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+     #swagger.responses[400] = {
+         description: '잘못된 요청',
+         content: {
+         'application/json': {
+             schema: {
+             type: 'object',
+             properties: {
+                 resultType: { type: 'string', example: 'FAIL' },
+                 error: {
+                 type: 'object',
+                 example: {
+                     errorCode: 'invalid_request',
+                     reason: '요청 형식이 잘못되었습니다.'
+                 }
+                 },
+                 success: { type: 'null' }
+             }
+             }
+         }
+         }
+     }
+    */
+    try {
+        console.log("최근 검색 기록 조회를 요청했습니다!");
+        const user = await userRecentSearch(bodyToUserRecentSearch(req.body));
+        res.status(StatusCodes.OK).success(user);
+    } catch (err) {
+        return next(err);
+    }
 };
