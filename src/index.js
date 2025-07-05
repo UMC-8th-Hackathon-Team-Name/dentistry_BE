@@ -6,7 +6,7 @@ import swaggerUiExpress from "swagger-ui-express";
 import fs from "fs";
 import path from "path";
 import HTTPS from "https";
-import { handleUserSignUp } from "./controllers/user.controller.js";
+import { handleUserSignUp,handleUserSignUpComplete,handleUserLogin,handlePatchPasswd,handleAutoComplete } from './controllers/user.controller.js';
 import {
   handleUserEditProfile,
   handleUserProfile,
@@ -19,18 +19,15 @@ import {
   handleRouteSearch,
 } from "./controllers/search.controller.js";
 
-dotenv.config();
-
-const app = express();
-const port = process.env.PORT;
-
 const corsOptions = {
   origin: "*",
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   preflightContinue: false,
   optionsSuccessStatus: 204,
 };
-
+dotenv.config();
+const app = express()
+const port = process.env.PORT
 app.use(cors(corsOptions));
 app.use(express.static("public"));
 app.use(express.json());
@@ -90,6 +87,14 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
+
+app.post('/auth/signup', handleUserSignUp);
+app.post('/auth/complete',handleUserSignUpComplete)
+app.post('/auth/login',handleUserLogin)
+app.patch('/auth/resetPasswd',handlePatchPasswd)
+app.get('/autoComplete',handleAutoComplete)
+
+
 app.post("/v1/api/signup", handleUserSignUp);
 app.post('/v1/api/signup', handleUserSignUp);
 app.patch('/profile/edit', handleUserEditProfile);
@@ -110,6 +115,7 @@ app.use((err, req, res, next) => {
     reason: err.reason || err.message || "서버가 응답하지 못 하였습니다.",
     data: err.data || null,
   });
+
 });
 
 const option = {
