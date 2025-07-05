@@ -108,7 +108,14 @@ export const searchFacility = async (data) => {
         await wheelChairLiftRequestResponse.json()
       ).response;
       const wheelChairLiftItems = wheelChairLiftRequestResult.body.items.item;
-      stationFacility.wheelChairLift = wheelChairLiftItems;
+      const wheelChairLiftItemConverted = [];
+      wheelChairLiftItems.forEach((element) => {
+        wheelChairLiftItemConverted.push({
+          name: element.fcltNm,
+          available: element.oprtngSitu == "M" || element.oprtngSitu == null,
+        });
+      });
+      stationFacility.wheelChairLift = wheelChairLiftItemConverted;
       // 무빙 워크
       const movingWalkRequestURL = `https://apis.data.go.kr/B553766/wksn/getWksnMvnwlk?serviceKey=${publicApiKey}&dataType=JSON&stnCd=${paddedCode}&numOfRows=100`;
       const movingWalkRequestResponse = await fetch(movingWalkRequestURL);
