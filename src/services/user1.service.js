@@ -1,4 +1,3 @@
-import e from "express";
 import {
     responseFromUserEdit,
     responseFromUserProfile,
@@ -9,6 +8,7 @@ import {
     delUser,
     delUserPrefer,
     delUserSearch,
+    delUserSearchStation,
     getUserPrefer,
     getUserProfile,
     getUserSearch,
@@ -43,8 +43,9 @@ export const userDeleteProfile = async (data) => {
     await delUserPrefer({ id: data.id });
     const search = await getUserSearch({ id: data.id });
     for (const item of search) {
-        await delUserSearch({ id: item.id });
+        await delUserSearchStation({ id: item.id });
     }
+    await delUserSearch({ id: search.id });
     const user = await delUser({ id: data.id });
     return responseFromUserProfile(user);
 };
