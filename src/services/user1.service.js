@@ -12,7 +12,8 @@ import {
     getUserPrefer,
     getUserProfile,
     getUserSearch,
-    getUserSearchAll
+    getUserSearchAll,
+    getUser,
 } from "../repositories/user1.repository.js";
 
 export const userEdit = async (data) => {
@@ -23,9 +24,9 @@ export const userEdit = async (data) => {
     await delUserPrefer({ id: data.id });
     await createUserPrefer({
         id: data.id,
-        categoryIds: data.categoryIds,
+        facility: data.facility,
     });
-    const editUser = await getUserPrefer({ id: data.id, categoryIds: data.categoryIds });
+    const editUser = await getUserPrefer({ id: data.id, facility: data.facility });
     return responseFromUserEdit(
         {
             user: { id: data.id },
@@ -77,9 +78,11 @@ export const UserDeleteSearch = async (data) => {
     if (!user) {
         throw new UserNotFoundError("유저 정보를 가져오지 못 합니다.");
     }
-    const search = await delUserSearch({ id: data.id });
-    if (!search) {
-        throw new Error("User search history not found");
+    const search = await getUserSearch({ id: data.id });
+
+    for (const item of search) {
+        await delUserSearchStation({ id: item.id });
     }
-    return responseFromUserRecentSearch(search);
+    const dSearch = await delUserSearch({ id: search.id });
+    return responseFromUserRecentSearch(dSearch);
 }
