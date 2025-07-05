@@ -5,6 +5,13 @@ import swaggerAutogen from "swagger-autogen";
 import swaggerUiExpress from "swagger-ui-express";
 import { handleUserSignUp } from "./controllers/user.controller.js";
 import {
+  handleUserEditProfile,
+  handleUserProfile,
+  handleUserDeleteProfile,
+  handleRecentSearch,
+  handleDeleteRecentSearch
+} from "./controllers/user1.controller.js";
+import {
   handleFacilitySearch,
   handleRouteSearch,
 } from "./controllers/search.controller.js";
@@ -81,6 +88,12 @@ app.get("/", (req, res) => {
 });
 
 app.post("/v1/api/signup", handleUserSignUp);
+app.post('/v1/api/signup', handleUserSignUp);
+app.patch('/profile/edit', handleUserEditProfile);
+app.post('/profile/me', handleUserProfile);
+app.delete('/profile/delete/me', handleUserDeleteProfile);
+app.post('/recent', handleRecentSearch);
+app.delete('/recent', handleDeleteRecentSearch);
 app.get("/map/search", handleRouteSearch);
 app.get("/facility/search", handleFacilitySearch);
 
@@ -90,8 +103,8 @@ app.use((err, req, res, next) => {
   }
 
   res.status(err.statusCode || 500).error({
-    errorCode: err.errorCode || "unknown",
-    reason: err.reason || err.message || null,
+    errorCode: err.errorCode || "C001",
+    reason: err.reason || err.message || "서버가 응답하지 못 하였습니다.",
     data: err.data || null,
   });
 });

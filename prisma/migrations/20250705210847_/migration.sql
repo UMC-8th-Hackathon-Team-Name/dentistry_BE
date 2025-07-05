@@ -34,6 +34,7 @@ CREATE TABLE `subway_station` (
     `name` VARCHAR(255) NOT NULL,
     `latitude` FLOAT NOT NULL,
     `longitude` FLOAT NOT NULL,
+    `code` INTEGER NOT NULL,
 
     UNIQUE INDEX `name`(`name`),
     PRIMARY KEY (`id`)
@@ -52,8 +53,6 @@ CREATE TABLE `prefer_facility` (
 CREATE TABLE `facility` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(255) NOT NULL,
-    `status` BOOLEAN NOT NULL DEFAULT true,
-    `updated_at` DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
 
     UNIQUE INDEX `name`(`name`),
     PRIMARY KEY (`id`)
@@ -64,17 +63,27 @@ CREATE TABLE `subway_station_facility` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `subway_station_id` INTEGER NOT NULL,
     `facility_id` INTEGER NOT NULL,
+    `count` INTEGER NOT NULL DEFAULT 0,
+    `updated_at` DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
 
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `line_type` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(255) NOT NULL,
+
+    UNIQUE INDEX `line_type_name_key`(`name`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `line` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(255) NOT NULL,
+    `subway_line_id` INTEGER NOT NULL,
     `subway_station_id` INTEGER NOT NULL,
 
-    UNIQUE INDEX `line_name_key`(`name`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -101,3 +110,6 @@ ALTER TABLE `subway_station_facility` ADD CONSTRAINT `subway_station_facility_fa
 
 -- AddForeignKey
 ALTER TABLE `line` ADD CONSTRAINT `line_subway_station_id_fkey` FOREIGN KEY (`subway_station_id`) REFERENCES `subway_station`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `line` ADD CONSTRAINT `line_subway_line_id_fkey` FOREIGN KEY (`subway_line_id`) REFERENCES `line_type`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
