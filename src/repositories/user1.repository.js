@@ -45,10 +45,16 @@ export const getUserSearch = async (data) => {
     const user = await prisma.search.findMany({
         where: { userId: data.id },
     });
+    console.log("getUserSearch", user);
     return user;
 };
-
 export const delUserSearch = async (data) => {
+    const search = await prisma.search.deleteMany({
+        where: { id: data.id },
+    });
+    return search;
+};
+export const delUserSearchStation = async (data) => {
     const search = await prisma.searchStation.deleteMany({
         where: { searchId: data.id },
     });
