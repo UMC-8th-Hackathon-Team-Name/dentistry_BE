@@ -23,7 +23,6 @@ model Search {
   id             Int             @id @default(autoincrement())
   userId         Int             @map("user_id")
   user           User?           @relation(fields: [userId], references: [id])
-  query          String          @db.VarChar(255)
   createdAt      DateTime        @default(now()) @map("created_at") @db.DateTime(6)
   searchStations SearchStation[]
 
@@ -36,7 +35,6 @@ model SearchStation {
   search    Search?        @relation(fields: [searchId], references: [id])
   stationId Int            @map("station_id")
   station   SubwayStation? @relation(fields: [stationId], references: [id])
-  createdAt DateTime       @default(now()) @map("created_at") @db.DateTime(6)
 
   @@map("search_station")
 }
@@ -59,7 +57,6 @@ model PreferFacility {
   user       User?     @relation(fields: [userId], references: [id])
   facilityId Int       @map("facility_id")
   facility   Facility? @relation(fields: [facilityId], references: [id])
-  createdAt  DateTime  @default(now()) @map("created_at") @db.DateTime(6)
 
   @@map("prefer_facility")
 }
@@ -69,8 +66,10 @@ model Facility {
   name                    String                  @unique(map: "name") @db.VarChar(255)
   status                  Boolean                 @default(true)
   updatedAt               DateTime                @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
-  PreferFacilities        PreferFacility[]
-  SubwayStationFacilities SubwayStationFacility[]
+  preferFacilities        PreferFacility[]
+  subwayStationFacilities SubwayStationFacility[]
+
+  @@map("facility")
 }
 
 model SubwayStationFacility {
@@ -79,7 +78,6 @@ model SubwayStationFacility {
   subwayStation   SubwayStation? @relation(fields: [subwayStationId], references: [id])
   facilityId      Int            @map("facility_id")
   facility        Facility?      @relation(fields: [facilityId], references: [id])
-  createdAt       DateTime       @default(now()) @map("created_at") @db.DateTime(6)
 
   @@map("subway_station_facility")
 }
