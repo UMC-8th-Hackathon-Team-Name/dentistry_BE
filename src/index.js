@@ -3,9 +3,6 @@ import dotenv from "dotenv";
 import cors from "cors";
 import swaggerAutogen from "swagger-autogen";
 import swaggerUiExpress from "swagger-ui-express";
-import fs from "fs";
-import path from "path";
-import HTTPS from "https";
 import { handleUserSignUp, handleUserSignUpComplete, handleUserLogin, handlePatchPasswd, handleAutoComplete } from './controllers/user.controller.js';
 import {
   handleUserEditProfile,
@@ -118,16 +115,6 @@ app.use((err, req, res, next) => {
 
 });
 
-const option = {
-  ca: fs.readFileSync("/opt/app/src/.pem/fullchain.pem"),
-  key: fs
-    .readFileSync(path.resolve(process.cwd(), "/opt/app/src/.pem/privkey.pem"), "utf8")
-    .toString(),
-  cert: fs
-    .readFileSync(path.resolve(process.cwd(), "/opt/app/src/.pem/cert.pem"), "utf8")
-    .toString(),
-};
-
-HTTPS.createServer(option, app).listen(port, () => {
-  console.log(`[HTTPS] Server is runnig on port ${port}`);
-});
+app.listen(port, () => {
+  console.log(`Server: http://localhost:${port}`)
+})
