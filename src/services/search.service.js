@@ -9,19 +9,20 @@ import {
 } from "../repositories/search.repository.js";
 
 export const searchRoute = async (data) => {
+  const odsayApiKey = process.env.ODSAY_DATA_API_KEY;
   const startCoordinate = await getStationCoordinate(data.start);
   const endCoordinate = await getStationCoordinate(data.end);
   if (startCoordinate == -1 || endCoordinate == -1) {
     throw new StationNotFoundError("존재하지 않는 역입니다.", data);
   }
   //최적의 경로 검색
-  const routeRequestUrl = `https://api.odsay.com/v1/api/searchPubTransPathT?lang=&SX=${startCoordinate.lon}&SY=${startCoordinate.lat}&EX=${endCoordinate.lon}&EY=${endCoordinate.lat}&SearchPathType=1&apiKey=hfxDDEOp0fsH2Wv2xoCDaQya6Gm3TqTQ2P0FRudCi1M`;
+  const routeRequestUrl = `https://api.odsay.com/v1/api/searchPubTransPathT?lang=&SX=${startCoordinate.lon}&SY=${startCoordinate.lat}&EX=${endCoordinate.lon}&EY=${endCoordinate.lat}&SearchPathType=1&apiKey=${odsayApiKey}`;
   const routeRequestResponse = await fetch(routeRequestUrl);
   const routeRequestResult = (await routeRequestResponse.json()).result;
   const mapObject = "0:0@" + routeRequestResult.path[0].info.mapObj;
 
   // 경로 라인을 생성하기 위한 라인 좌표 로드
-  const pathRequestUrl = `https://api.odsay.com/v1/api/loadLane?mapObject=${mapObject}&apiKey=hfxDDEOp0fsH2Wv2xoCDaQya6Gm3TqTQ2P0FRudCi1M`;
+  const pathRequestUrl = `https://api.odsay.com/v1/api/loadLane?mapObject=${mapObject}&apiKey=${odsayApiKey}`;
   const pathRequestResponse = await fetch(pathRequestUrl);
   const pathRequestResult = (await pathRequestResponse.json()).result;
   const pathCoordinates = pathRequestResult.lane;
@@ -30,13 +31,15 @@ export const searchRoute = async (data) => {
 };
 
 export const searchFacility = async (data) => {
+  const odsayApiKey = process.env.ODSAY_DATA_API_KEY;
+  const publicApiKey = process.env.PUBLIC_DATA_API_KEY;
   const startCoordinate = await getStationCoordinate(data.start);
   const endCoordinate = await getStationCoordinate(data.end);
   if (startCoordinate == -1 || endCoordinate == -1) {
     throw new StationNotFoundError("존재하지 않는 역입니다.", data);
   }
   //최적의 경로 검색
-  const routeRequestUrl = `https://api.odsay.com/v1/api/searchPubTransPathT?lang=&SX=${startCoordinate.lon}&SY=${startCoordinate.lat}&EX=${endCoordinate.lon}&EY=${endCoordinate.lat}&SearchPathType=1&apiKey=hfxDDEOp0fsH2Wv2xoCDaQya6Gm3TqTQ2P0FRudCi1M`;
+  const routeRequestUrl = `https://api.odsay.com/v1/api/searchPubTransPathT?lang=&SX=${startCoordinate.lon}&SY=${startCoordinate.lat}&EX=${endCoordinate.lon}&EY=${endCoordinate.lat}&SearchPathType=1&apiKey=${odsayApiKey}`;
   const routeRequestResponse = await fetch(routeRequestUrl);
   const routeRequestResult = (await routeRequestResponse.json()).result;
   const subPath = routeRequestResult.path[0].subPath;
@@ -67,7 +70,7 @@ export const searchFacility = async (data) => {
       const paddedCode = code.toString().padStart(4, "0");
       //   console.log(paddedCode);
       // 앨리베이터
-      const elevatorRequestURL = `https://apis.data.go.kr/B553766/wksn/getWksnElvtr?serviceKey=z59JjZUxTFXC32%2FMdzl1rZ943CyUmSPymAM5wW%2FLCZoJ39WjXcTJpHbW5iNxEXl9MtCa4Gf8KDtveHslJPnjgg%3D%3D&dataType=JSON&stnCd=${paddedCode}&numOfRows=100`;
+      const elevatorRequestURL = `https://apis.data.go.kr/B553766/wksn/getWksnElvtr?serviceKey=${publicApiKey}&dataType=JSON&stnCd=${paddedCode}&numOfRows=100`;
       const elevatorRequestResponse = await fetch(elevatorRequestURL);
       const elevatorRequestResult = (await elevatorRequestResponse.json())
         .response;
@@ -82,7 +85,7 @@ export const searchFacility = async (data) => {
       stationFacility.elevator = elevatorItemConverted;
 
       //에스컬레이터
-      const escalatorRequestURL = `https://apis.data.go.kr/B553766/wksn/getWksnEsctr?serviceKey=z59JjZUxTFXC32%2FMdzl1rZ943CyUmSPymAM5wW%2FLCZoJ39WjXcTJpHbW5iNxEXl9MtCa4Gf8KDtveHslJPnjgg%3D%3D&dataType=JSON&pageNo=1&numOfRows=100&stnCd=${paddedCode}`;
+      const escalatorRequestURL = `https://apis.data.go.kr/B553766/wksn/getWksnEsctr?serviceKey=${publicApiKey}&dataType=JSON&pageNo=1&numOfRows=100&stnCd=${paddedCode}`;
       const escalatorRequestResponse = await fetch(escalatorRequestURL);
       const escalatorRequestResult = (await escalatorRequestResponse.json())
         .response;
@@ -97,7 +100,7 @@ export const searchFacility = async (data) => {
       stationFacility.escalator = escalatorItemConverted;
 
       // 휠체어 리프트
-      const wheelChairLiftRequestURL = `https://apis.data.go.kr/B553766/wksn/getWksnWhcllift?serviceKey=z59JjZUxTFXC32%2FMdzl1rZ943CyUmSPymAM5wW%2FLCZoJ39WjXcTJpHbW5iNxEXl9MtCa4Gf8KDtveHslJPnjgg%3D%3D&dataType=JSON&pageNo=1&numOfRows=100&stnCd=${paddedCode}`;
+      const wheelChairLiftRequestURL = `https://apis.data.go.kr/B553766/wksn/getWksnWhcllift?serviceKey=${publicApiKey}&dataType=JSON&pageNo=1&numOfRows=100&stnCd=${paddedCode}`;
       const wheelChairLiftRequestResponse = await fetch(
         wheelChairLiftRequestURL
       );
@@ -107,7 +110,7 @@ export const searchFacility = async (data) => {
       const wheelChairLiftItems = wheelChairLiftRequestResult.body.items.item;
       stationFacility.wheelChairLift = wheelChairLiftItems;
       // 무빙 워크
-      const movingWalkRequestURL = `https://apis.data.go.kr/B553766/wksn/getWksnMvnwlk?serviceKey=z59JjZUxTFXC32%2FMdzl1rZ943CyUmSPymAM5wW%2FLCZoJ39WjXcTJpHbW5iNxEXl9MtCa4Gf8KDtveHslJPnjgg%3D%3D&dataType=JSON&stnCd=${paddedCode}&numOfRows=100`;
+      const movingWalkRequestURL = `https://apis.data.go.kr/B553766/wksn/getWksnMvnwlk?serviceKey=${publicApiKey}&dataType=JSON&stnCd=${paddedCode}&numOfRows=100`;
       const movingWalkRequestResponse = await fetch(movingWalkRequestURL);
       const movingWalkRequestResult = (await movingWalkRequestResponse.json())
         .response;
@@ -121,7 +124,7 @@ export const searchFacility = async (data) => {
       });
       stationFacility.movingWalk = movingWalkItemConverted;
 
-      const wheelChairChargerRequestURL = `https://apis.data.go.kr/B553766/wksn/getWksnWhclCharge?serviceKey=z59JjZUxTFXC32%2FMdzl1rZ943CyUmSPymAM5wW%2FLCZoJ39WjXcTJpHbW5iNxEXl9MtCa4Gf8KDtveHslJPnjgg%3D%3D&dataType=JSON&stnCd=${paddedCode}&numOfRows=100`;
+      const wheelChairChargerRequestURL = `https://apis.data.go.kr/B553766/wksn/getWksnWhclCharge?serviceKey=${publicApiKey}&dataType=JSON&stnCd=${paddedCode}&numOfRows=100`;
       const wheelChairChargerRequestResponse = await fetch(
         wheelChairChargerRequestURL
       );
@@ -142,7 +145,7 @@ export const searchFacility = async (data) => {
 
       stationFacility.wheelChairCharger = wheelChairChargerItemConverted;
       // 수화 영상 전화
-      const handVideoPhoneRequestURL = `https://apis.data.go.kr/B553766/wksn/getWksnSlng?serviceKey=z59JjZUxTFXC32%2FMdzl1rZ943CyUmSPymAM5wW%2FLCZoJ39WjXcTJpHbW5iNxEXl9MtCa4Gf8KDtveHslJPnjgg%3D%3D&dataType=JSON&stnCd=${paddedCode}&numOfRows=100`;
+      const handVideoPhoneRequestURL = `https://apis.data.go.kr/B553766/wksn/getWksnSlng?serviceKey=${publicApiKey}&dataType=JSON&stnCd=${paddedCode}&numOfRows=100`;
       const handVideoPhoneRequestResponse = await fetch(
         handVideoPhoneRequestURL
       );
