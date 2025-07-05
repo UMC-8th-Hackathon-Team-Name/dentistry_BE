@@ -40,3 +40,24 @@ export const getUserProfile = async (data) => {
     });
     return user;
 }
+
+export const getUserSearch = async (data) => {
+    const user = await prisma.search.findMany({
+        where: { userId: data.id },
+    });
+    return user;
+};
+
+export const delUserSearch = async (data) => {
+    const search = await prisma.searchStation.deleteMany({
+        where: { searchId: data.id },
+    });
+    return search;
+};
+
+export const delUser = async (data) => {
+    const user = await prisma.user.delete({
+        where: { id: data.id },
+    });
+    return user;
+}

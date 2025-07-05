@@ -4,9 +4,12 @@ import {
  } from "../dtos/user1.dto.js";
 import {
     createUserPrefer,
+    delUser,
     delUserPrefer,
+    delUserSearch,
     getUserPrefer,
-    getUserProfile
+    getUserProfile,
+    getUserSearch
 } from "../repositories/user1.repository.js";
 
 export const userEdit = async (data) => {
@@ -32,3 +35,13 @@ export const userProfile = async (data) => {
     return responseFromUserProfile(user);
 
 }
+
+export const userDeleteProfile = async (data) => {
+    await delUserPrefer({ id: data.id });
+    const search = await getUserSearch({ id: data.id });
+    for (const item of search) {
+        await delUserSearch({ id: item.id });
+    }
+    const user = await delUser({ id: data.id });
+    return responseFromUserProfile(user);
+};

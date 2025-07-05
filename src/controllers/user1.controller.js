@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
-import { bodyToUserEdit, bodyToUserProfile } from "../dtos/user1.dto.js";
-import { userEdit, userProfile } from "../services/user1.service.js";
+import { bodyToUserDelete, bodyToUserEdit, bodyToUserProfile } from "../dtos/user1.dto.js";
+import { userDeleteProfile, userEdit, userProfile } from "../services/user1.service.js";
 
 // 프로필 정보 수정
 export const handleUserEditProfile = async (req, res, next) => {
@@ -171,4 +171,70 @@ export const handleUserProfile = async (req, res, next) => {
   } catch (err) {
     return next(err);
   }
+};
+
+export const handleUserDeleteProfile = async (req, res, next) => {
+
+    /*
+     #swagger.tags = ['User']
+     #swagger.summary = '내 프로필 삭제'
+     #swagger.description = '내 프로필을 삭제하기 위한 API입니다.'
+    
+     #swagger.requestBody = {
+         required: true,
+         content: {
+         'application/json': {
+             schema: {
+             type: 'object',
+             properties: {
+                 id: { type: 'number', example: 1 },
+             },
+             }
+         }
+         }
+     }
+     #swagger.responses[200] = {
+         description: '프로필 삭제 성공',
+         content: {
+         'application/json': {
+             schema: {
+             type: 'object',
+             properties: {
+                 resultType: { type: 'string', example: 'SUCCESS' },
+                 error: { type: 'object', example: null },
+                 success: { type: 'null' }
+             }
+             }
+         }
+         }
+     }
+     #swagger.responses[400] = {
+         description: '잘못된 요청',
+         content: {
+         'application/json': {
+             schema: {
+             type: 'object',
+             properties: {
+                 resultType: { type: 'string', example: 'FAIL' },
+                 error: {
+                 type: 'object',
+                 example: {
+                     errorCode: 'invalid_request',
+                     reason: '요청 형식이 잘못되었습니다.'
+                 }
+                 },
+                 success: { type: 'null' }
+             }
+             }
+         }
+         }
+     }
+    */
+     try {
+        console.log("내 프로필 삭제를 요청했습니다!");
+        const user = await userDeleteProfile(bodyToUserDelete(req.body));
+        res.status(StatusCodes.OK).success(user);
+      } catch (err) {
+        return next(err);
+      }
 };

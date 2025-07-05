@@ -4,7 +4,11 @@ import cors from 'cors';
 import swaggerAutogen from "swagger-autogen";
 import swaggerUiExpress from "swagger-ui-express";
 import { handleUserSignUp } from "./controllers/user.controller.js";
-import { handleUserEditProfile, handleUserProfile } from "./controllers/user1.controller.js";
+import {
+  handleUserEditProfile,
+  handleUserProfile,
+  handleUserDeleteProfile
+} from "./controllers/user1.controller.js";
 
 dotenv.config();
 
@@ -80,6 +84,7 @@ app.get('/', (req, res) => {
 app.post('/v1/api/signup', handleUserSignUp);
 app.patch('/profile/edit', handleUserEditProfile);
 app.post('/profile/me', handleUserProfile);
+app.delete('/profile/delete/me', handleUserDeleteProfile);
 app.use((err, req, res, next) => {
     if (res.headersSent) {
         return next(err);

@@ -22,3 +22,15 @@ export const responseFromUserProfile = (user) => {
         user
     }
 }
+
+export const bodyToUserDelete = (body) => {
+    return {
+        id: body.id,
+    }
+}
+
+export const responseFromUserDelete = (user) => {
+    return {
+        user
+    }
+}
