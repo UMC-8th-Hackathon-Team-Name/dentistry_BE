@@ -1,3 +1,4 @@
+import e from "express";
 import {
     responseFromUserEdit,
     responseFromUserProfile,
@@ -59,3 +60,11 @@ export const userRecentSearch = async (data) => {
     }
     return responseFromUserRecentSearch(...response);
 };
+
+export const UserDeleteSearch = async (data) => {
+    const search = await delUserSearch({ id: data.id });
+    if (!search) {
+        throw new Error("User search history not found");
+    }
+    return responseFromUserRecentSearch(search);
+}
